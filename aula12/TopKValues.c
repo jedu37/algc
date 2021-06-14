@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
   }
   
   // Create heap
-  MinHeap* h = ...
+  MinHeap* h = MinHeapCreate(k,comparator,printer);
   if (h == NULL) abort();
 
   // Read the first K values into a MIN-heap
@@ -78,17 +78,30 @@ int main(int argc, char* argv[]) {
   //    Read it from file
   //    Insert it in the heap
 
-  for( ... ) { ... }
+  for(int i = 0; i<k;i++) {
+    int aux;
+    fscanf(f,"%d",&aux);
+    MinHeapInsert(h,&(aux));
+  }
 
   // Read and process each one of the remaining values
   while (!feof(f)) {
-    ...
+    int aux;
+    fscanf(f,"%d",&aux);
+    if(comparator(&aux, MinHeapGetMin(h) )>0){
+      MinHeapRemoveMin(h);
+      MinHeapInsert(h,&aux);
+    }
   }
 
   // The heap stores the largest k values
   // List them by removing each one from the heap
-
-  while( ... ) { ... }
+  printf("Listing largest numbers:\n");
+  while(MinHeapSize(h)>0){
+    printer(MinHeapGetMin(h));
+    MinHeapRemoveMin(h);
+  }
+  printf("\n");
 
   // House-keeping
   MinHeapDestroy(&h);

@@ -1,5 +1,5 @@
-//NMEC: ...
-//NOME: ...
+//NMEC: 93250
+//NOME: João Figueiredo
 //
 // João Manuel Rodrigues, AlgC, June 2021
 // Joaquim Madeira, AlgC, June 2021
@@ -102,13 +102,15 @@ void MinHeapInsert(MinHeap* ph, void* item) {
     int p = _parent(n);
 
     // if item not less than _parent, then we've found the right spot!
-    if (...) break;
+    if(ph->compare(item,ph->array[p])>0){
+      break;
+    }
 
     // otherwise, move up the item at node p to open up space for new item
-    ph->array[...] = ph->array[...];
+    ph->array[n] = ph->array[p];
 
     // update
-    n = ... // the new vacant spot
+    n = p; // the new vacant spot
   }
   ph->array[n] = item;  // store item at node n
   ph->size++;
@@ -122,28 +124,28 @@ void MinHeapRemoveMin(MinHeap* ph) {
   int n = 0;   // the just emptied spot... must fill it with smallest child
   while (1) {
     // index of first child
-    int min = ...          // first _child (might not exist)
+    int min = _child(n,1);// first _child (might not exist)
 
     if (!(min < ph->size)) break;  // if no second _child, stop looking
 
     // if second _child is smaller, choose it
-    if (...) {
-       min = ...
+    if (ph->compare(ph->array[min],ph->array[_child(n,2)]) > 0) {
+       min = _child(n,2);
     }
 
     // if smallest _child is not smaller than last, stop looking
     if (!(ph->compare(ph->array[min], ph->array[ph->size]) < 0)) break;
 
     // move smallest _child down to fill empty _parent spot
-    ph->array[...] = ph->array[...];
+    ph->array[n] = ph->array[min];
 
     n = min;  // now, the smallest _child spot was just emptied!
   }
   // move last element to emptied spot
-  ph->array[...] = ph->array[...];
+  ph->array[n] = ph->array[ph->size];
 
   // mark last element as vacant
-  ph->array[...] = NULL;
+  ph->array[ph->size] = NULL;
 }
 
 // Check the (min-)heap property (the heap invariant):
@@ -154,7 +156,7 @@ int MinHeapCheck(MinHeap* ph) {
   // For each node other than root: compare with its parent
   for (int n = 1; n < ph->size; n++) {
     int p = _parent(n);
-    if (... < 0) return 0;
+    if (ph->compare(ph->array[n],ph->array[p]) < 0) return 0;
   }
   return 1;
 }
